@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for rc in /etc/rc3.d/S*; do
+  (bash $rc start)&
+done
+
+echo '// waiting forever'
+sleep infinity
