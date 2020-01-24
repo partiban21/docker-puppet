@@ -4,17 +4,19 @@ services:
   puppet:
     container_name: puppet
     hostname: puppet
-    image: puppet
+    build: ./puppet-image
+    image: puppet:latest
+    volumes:
+      - ./production:/etc/puppetlabs/code/environments/production
     networks:
       - lan
     ports:
       - 8140
-    volumes:
-      - ./production:/etc/puppetlabs/code/environments/production
   server1:
     container_name: server1
     hostname: server1
-    image: server
+    build: ./server-image
+    image: server:latest
     networks:
       - lan
 
