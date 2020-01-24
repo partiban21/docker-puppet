@@ -3,7 +3,7 @@ version: '2'
 services:
   puppet:
     container_name: puppet
-    hostname: puppet
+    hostname: puppet.local
     build: ./puppet-image
     image: puppet:latest
     volumes:
@@ -14,7 +14,7 @@ services:
       - 8140
   server1:
     container_name: server1
-    hostname: server1
+    hostname: server1.local
     build: ./server-image
     image: server:latest
     networks:
