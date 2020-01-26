@@ -5,5 +5,5 @@ RUN echo -e "*.local" > /etc/puppetlabs/puppet/autosign.conf
 RUN rm -f /etc/rc3.d/*
 COPY rc/* /etc/rc3.d/
 COPY bootstrap /
-CMD /bootstrap
+CMD ["/bootstrap"]
 EXPOSE 8041
