@@ -1,9 +1,7 @@
-FROM centos:7
+FROM base:latest
+RUN rpm --import https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
 RUN yum install -y https://yum.puppet.com/puppet6-release-el-7.noarch.rpm
-RUN yum install -y vim git tree puppetserver
-RUN echo -e "*.local" > /etc/puppetlabs/puppet/autosign.conf
-RUN rm -f /etc/rc3.d/*
+RUN yum install -y puppetserver
+RUN echo -e "*" > /etc/puppetlabs/puppet/autosign.conf
 COPY rc/* /etc/rc3.d/
-COPY bootstrap /
-CMD ["/bootstrap"]
 EXPOSE 8041
