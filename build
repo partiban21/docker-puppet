@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for image in base puppet server; do
+  docker build -t $image $image-image
+done
