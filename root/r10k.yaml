@@ -1,0 +1,4 @@
+:sources:
+  :base:
+    remote: ssh://git@git.local/puppet-control.git
+    basedir: /etc/puppetlabs/code/environments

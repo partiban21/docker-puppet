@@ -19,6 +19,8 @@ alias gk="git log --graph --pretty=format:'%C(bold)%h%Creset%C(magenta)%d%Creset
 
 export EDITOR=vim
 export PS1='[\u@\h \W]\$ '
+
+export PATH=$PATH:/opt/puppetlabs/bin
 export PATH=/opt/puppetlabs/puppet/bin:$PATH
 
 cd $HOME
