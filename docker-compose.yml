@@ -11,7 +11,7 @@ services:
     networks:
       - lan
     ports:
-      - 8142:8140
+      - 8140:8140
   server1:
     hostname: server1.local
     build: ./server-image
