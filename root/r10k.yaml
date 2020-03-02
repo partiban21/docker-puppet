@@ -1,4 +1,6 @@
+---
+:cachedir: /var/cache/r10k
 :sources:
-  :base:
-    remote: ssh://git@git.local/puppet-control.git
+  :local:
+    remote: https://github.com/mcgarrigle/control.git
     basedir: /etc/puppetlabs/code/environments
