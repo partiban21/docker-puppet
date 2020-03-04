@@ -5,5 +5,5 @@ RUN yum install -y puppetserver
 RUN echo -e "*" > /etc/puppetlabs/puppet/autosign.conf
 RUN echo "export PATH=$PATH:/opt/puppetlabs/bin" >> /root/.bashrc
 RUN /opt/puppetlabs/puppet/bin/gem install r10k
-COPY rc/* /etc/rc3.d/
+RUN systemctl enable puppetserver
 EXPOSE 8041

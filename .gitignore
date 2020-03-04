@@ -5,3 +5,6 @@ production
 puppet
 puppetdb
 puppetdb-postgres
+root/*
+!root/r10k.yaml
+!root/.bashrc

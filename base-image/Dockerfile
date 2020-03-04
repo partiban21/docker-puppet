@@ -1,8 +1,5 @@
-FROM centos:7
+FROM centos/systemd
 RUN yum install -y epel-release
 RUN yum install -y vim git tree
 COPY bashrc /root/.bashrc
-RUN rm -f /etc/rc3.d/*
-COPY rc/* /etc/rc3.d/
-COPY bootstrap /
-CMD ["/bootstrap"]
+CMD ["/usr/sbin/init"]
