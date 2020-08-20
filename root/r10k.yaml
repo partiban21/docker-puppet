@@ -2,5 +2,5 @@
 :cachedir: /var/cache/r10k
 :sources:
   :local:
-    remote: https://github.com/mcgarrigle/control.git
+    remote: https://github.com/partiban21/puppet.control.git
     basedir: /etc/puppetlabs/code/environments

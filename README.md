@@ -84,6 +84,9 @@ puppet node.
 
     # remove all docker containers
     docker container rm $(docker ps -a -q)
+   
+    # remove image
+    docker image rm docker-puppet_puppet...
     ```
 
 ### Extra things to note
