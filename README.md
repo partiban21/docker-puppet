@@ -25,7 +25,7 @@ puppet node.
   └────────────────────────────────────────────────────────────────────────┘
 ```
 
-# Development
+## Development
 
 1. Build docker images and start up docker containers 
     ```bash
@@ -34,18 +34,20 @@ puppet node.
     ```
 
 2. Open interactive docker container in terminal for puppet server
+    - Check puppet server is 'active(running)' if not enable puppetserver 
     - Check r10k.yaml is pointing to the correct control repository
     - Deploy 'specific' environment from 'specific' branch & check code has been cloned
     ```bash
     partiban@ubuntu:~$ docker exec -it docker-puppet_puppetmaster_1 bash
     
+    [root@puppetmaster ~]# systemctl status puppetserver.service
     [root@puppetmaster ~]# systemctl enable puppetserver
     [root@puppetmaster ~]# cat r10k.yaml
     ---
     :cachedir: /var/cache/r10k
     :sources:
       :local:
-    remote: https://github.com/../control.git
+    remote: https://github.com/partiban21/control.git
     basedir: /etc/puppetlabs/code/environments
 
     [root@puppetmaster ~]# r10k deploy environment production
@@ -62,6 +64,13 @@ puppet node.
     drwxr-xr-x  2 root root 4096 Aug 18 14:29 manifests
     drwxr-xr-x 14 root root 4096 Aug 18 14:30 modules
     -rw-r--r--  1 root root  152 Aug 18 14:29 r10k.yaml
+    
+    When developing control repo
+    -----------------------------
+    # update environemnt changes in control repo 
+    [root@puppetmaster ~]# r10k deploy environment production
+    # update Puppetfile changes in control repo
+    [root@puppetmaster ~]# r10k deploy environment production -p
     ```
 
 3. Open interactive docker container in terminal for puppet agent
@@ -91,7 +100,9 @@ puppet node.
 
 ### Extra things to note
 
-1. If you kill and remove docker containers. On the next docker-compose, you must 
+1. Puppet must have a 'production' environment.
+
+2. If you kill and remove docker containers. On the next docker-compose, you must 
 create the certs again:
     ```bash
     # Create certs
@@ -100,7 +111,7 @@ create the certs again:
     [root@puppetagent ~]# puppet agent -t
     ```
    
-2. Changing the 'service' & 'hostname' on the docker-compose file will require the 
+3. Changing the 'service' & 'hostname' on the docker-compose file will require the 
 'certname' & 'server' names specified in the Dockerfiles to also change. (Don't 
 use _/underscores in name)
     ```bash
