@@ -34,14 +34,13 @@ puppet node.
     ```
 
 2. Open interactive docker container in terminal for puppet server
-    - Check puppet server is 'active(running)' if not enable puppetserver 
     - Check r10k.yaml is pointing to the correct control repository
     - Deploy 'specific' environment from 'specific' branch & check code has been cloned
+    - Check puppet server is 'active(running)' if not enable puppetserver 
     ```bash
     partiban@ubuntu:~$ docker exec -it docker-puppet_puppetmaster_1 bash
-    
-    [root@puppetmaster ~]# systemctl status puppetserver.service
-    [root@puppetmaster ~]# systemctl enable puppetserver
+
+    # check r10k is correctly configured
     [root@puppetmaster ~]# cat r10k.yaml
     ---
     :cachedir: /var/cache/r10k
@@ -50,7 +49,11 @@ puppet node.
     remote: https://github.com/partiban21/control.git
     basedir: /etc/puppetlabs/code/environments
 
-    [root@puppetmaster ~]# r10k deploy environment production
+    # retrieve puppet control repository. 
+    # `-p` option used to pull puppet forge modules
+    [root@puppetmaster ~]# r10k deploy environment production -p
+
+    # check everything environment contains expected data
     [root@puppetmaster ~]# ls /etc/puppetlabs/code/environments/production/
     total 44
     drwxr-xr-x  6 root root 4096 Aug 18 15:37 .
@@ -64,7 +67,11 @@ puppet node.
     drwxr-xr-x  2 root root 4096 Aug 18 14:29 manifests
     drwxr-xr-x 14 root root 4096 Aug 18 14:30 modules
     -rw-r--r--  1 root root  152 Aug 18 14:29 r10k.yaml
-    
+
+    # check status of puppet server
+    [root@puppetmaster ~]# systemctl status puppetserver.service
+    [root@puppetmaster ~]# systemctl enable puppetserver
+   
     When developing control repo
     -----------------------------
     # update environemnt changes in control repo 
@@ -102,16 +109,41 @@ puppet node.
 
 1. Puppet must have a 'production' environment.
 
-2. If you kill and remove docker containers. On the next docker-compose, you must 
-create the certs again:
-    ```bash
-    # Create certs
-    [root@puppetmsater ~]# systemctl enable puppetserver
-
-    [root@puppetagent ~]# puppet agent -t
+2. If you kill and remove the (only) puppetagent docker container. On the next docker-compose, you must 
+erase and create the certs again:
     ```
+    partiban@ubuntu:~$ docker stop docker-puppet_puppetagent_1
+    partiban@ubuntu:~$ docker rm $(docker ps -a -f status=exited -q)
    
-3. Changing the 'service' & 'hostname' on the docker-compose file will require the 
+    [root@puppetagent ~]# puppet agent -t
+    Info: csr_attributes file loading from /etc/puppetlabs/puppet/csr_attributes.yaml
+    Info: Creating a new SSL certificate request for puppetagent
+    Info: Certificate Request fingerprint (SHA256): CD:F3:5F:CE:A2:B9:EC:3F:69:02:FB:8B:8D:E9:3E:BA:59:11:E4:A0:C8:F0:56:59:C0:4F:36:36:4D:84:B9:02
+    Info: Downloaded certificate for puppetagent from https://puppetmaster:8140/puppet-ca/v1
+    Error: The certificate for 'CN=puppetagent' does not match its private key
+    Error: Could not run: The certificate for 'CN=puppetagent' does not match its private key
+    
+    # remove exisitng puppetagent cert
+    [root@puppetmaster ~]# puppetserver ca clean --certname puppetagent
+    
+    # Create cert
+    [root@puppetagent ~]# puppet agent -t    
+    ```
+3. If you've killed the puppet agent, but not removed container this error will come up
+    ```bash
+    [root@puppetagent ~]# puppet agent -t  
+    Error: Connection to https://puppetmaster:8140/puppet/v3 failed, trying next route: Request to https://puppetmaster:8140/puppet/v3 failed after 0.058 seconds: SSL_connect returned=1 errno=0 state=error: sslv3 alert certificate unknown
+    Wrapped exception:
+    SSL_connect returned=1 errno=0 state=error: sslv3 alert certificate unknown
+    Warning: Unable to fetch my node definition, but the agent run will continue:
+    Warning: No more routes to puppet
+   
+    partiban@ubuntu:~$ docker rm $(docker ps -a -f status=exited -q)
+    partiban@ubuntu:~$ docker-compose up -d
+    # follow the steps above (note 2)
+    ```
+  
+4. Changing the 'service' & 'hostname' on the docker-compose file will require the 
 'certname' & 'server' names specified in the Dockerfiles to also change. (Don't 
 use _/underscores in name)
     ```bash
