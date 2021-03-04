@@ -166,3 +166,11 @@ use _/underscores in name)
     RUN echo -e "\n[main]\ncertname = puppetagent-centos-one\nserver = puppetmaster-centos" >> /etc/puppetlabs/puppet/puppet.conf
     ...
     ```
+
+5. Stopping and removing all docker containers created from docker-compose.
+   ```bash
+   # Stop all docker images where name begins with 'docker-puppet_'
+   partiban@ubuntu:~$ docker stop $( docker ps -a -q --filter="name=docker-puppet_")
+   # Remove all docker images where name begins with 'docker-puppet_'
+   partiban@ubuntu:~$ docker rm $( docker ps -a -q --filter="name=docker-puppet_")
+   ```
