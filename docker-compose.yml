@@ -2,8 +2,8 @@ version: '2'
 
 services:
   puppetmaster:
-    hostname: puppetmaster.local
     build: puppetmaster-image
+    container_name: puppetmaster
     privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
@@ -13,9 +13,19 @@ services:
       - lan
     ports:
       - 8140:8140
-  puppetagent:
-    hostname: puppetagent.local
+  puppetagent_1:
     build: puppetagent-image
+    container_name: puppetagent_1
+    hostname: puppetagent_one
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    networks:
+      - lan
+  puppetagent_2:
+    build: puppetagent-image
+    container_name: puppetagent_2
+    hostname: puppetagent_two
     privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro

@@ -38,7 +38,7 @@ puppet node.
     - Deploy 'specific' environment from 'specific' branch & check code has been cloned
     - Check puppet server is 'active(running)' if not enable puppetserver 
     ```bash
-    partiban@ubuntu:~$ docker exec -it docker-puppet_puppetmaster_1 bash
+    partiban@ubuntu:~$ docker exec -it puppetmaster bash
 
     # check r10k is correctly configured
     [root@puppetmaster ~]# cat r10k.yaml
@@ -83,7 +83,7 @@ puppet node.
 3. Open interactive docker container in terminal for puppet agent
     - Deploy puppet master to puppet agent
     ```bash    
-    partiban@ubuntu:~$ docker exec -it docker-puppet_puppetagent_1 bash
+    partiban@ubuntu:~$ docker exec -it puppetagent_1 bash
     
     [root@puppetagent ~]# puppet agent -t    
     ```
@@ -92,6 +92,9 @@ puppet node.
 
 5. Helpful commands
     ```bash
+    # kill & rm all related containers
+    docker-compose down
+     
     # list running docker containers 
     docker ps
 
@@ -109,10 +112,10 @@ puppet node.
 
 1. Puppet must have a 'production' environment.
 
-2. If you kill and remove the (only) puppetagent docker container. On the next docker-compose, you must 
+2. If you kill and remove (only) the puppetagent docker container. On the next docker-compose, you must 
 erase and create the certs again:
     ```
-    partiban@ubuntu:~$ docker stop docker-puppet_puppetagent_1
+    partiban@ubuntu:~$ docker stop puppetagent_1
     partiban@ubuntu:~$ docker rm $(docker ps -a -f status=exited -q)
    
     [root@puppetagent ~]# puppet agent -t
