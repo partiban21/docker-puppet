@@ -22,11 +22,6 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     networks:
       - lan
-    ports:
-      - 8081:8081
-      - 8123:8123
-      - 5000:5000
-      - 18443:18443
   puppetagent_2:
     build: puppetagent-image
     container_name: puppetagent_2
